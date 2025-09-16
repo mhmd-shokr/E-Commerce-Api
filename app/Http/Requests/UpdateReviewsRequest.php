@@ -22,8 +22,8 @@ class UpdateReviewsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "rating"=>'sometimes|integer|min:1|max:5,'.$this->productId,
-            'comment'=>'sometimes:string|max:255,'.$this->productId,
+            "rating"=>'sometimes|integer|min:1|max:5',
+            'comment'=>'sometimes|string|max:255',
         ];
     }
 }

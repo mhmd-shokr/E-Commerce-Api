@@ -69,7 +69,7 @@ Route::group(['prefix'=>'v1'],function(){
     Route::middleware(['auth:sanctum', 'role:Admin'])->group(function () {
         Route::post('/users/{id}/change-role', [AdminController::class, 'changeRole']);
         Route::post('/admin/dashboard', [AdminDashboardController::class, 'index']);
-        Route::get('/admin/seller-request',[AdminController::class,'indes']);
+        Route::get('/admin/seller-request',[AdminController::class,'index']);
         Route::put('/admin/seller-request/{id}/approve',[AdminController::class,'approve']);
         Route::put('/admin/seller-request/{id}/reject',[AdminController::class,'reject']);
     });

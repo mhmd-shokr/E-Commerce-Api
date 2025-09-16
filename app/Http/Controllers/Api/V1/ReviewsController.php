@@ -33,7 +33,7 @@ class ReviewsController extends Controller
         $product=Product::findOrFail($productId);
         
         //updateOrCreate => to make user can't do more than one reviews
-        $review=Reviews::updateOrCreate([
+        $review=Reviews::updateOrCreate(
             [
                 'user_id'=>Auth::user()->id,
                 'product_id'=>$product->id,
@@ -42,7 +42,7 @@ class ReviewsController extends Controller
                 'rating'=>$request->rating,
                 'comment'=>$request->comment,
             ],
-        ]);
+        );
 
         return response()->json([
             'status'=>true,
@@ -53,9 +53,17 @@ class ReviewsController extends Controller
     }
 
     public function update(UpdateReviewsRequest $request,$productId){
-        $userId=Auth::user()->id;
-        $review=Reviews::where('id',$userId)
-        ->where('product_id',$productId)->findOrFail();
+        $userId=Auth::id();
+        $review=Reviews::where('user_id',$userId)
+        ->where('product_id',$productId)->firstOrFail();
+
+        if(!$review){
+            return response()->json([
+                'status'=>false,
+                "message"=>'review not found',
+            
+            ],404);
+        }
         $validated=$request->validated();
         $review->update($validated);
         // $review->update($request->only([
@@ -73,8 +81,8 @@ class ReviewsController extends Controller
 
     public function destroy(Request $request ,$id){
         $userId=Auth::user()->id;
-        $review=Reviews::where('id',$userId)
-        ->where('product_id',$id)->findOrFail();
+        $review=Reviews::where('user_id',$userId)
+        ->where('product_id',$id)->firstOrFail();
         $review->delete();
 
         return response()->json([

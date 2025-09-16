@@ -30,13 +30,13 @@ class User extends Authenticatable
         return $this->hasMany(Reviews::class);
     }
     
-    public function RequetsSeller(){
-        return $this->hasOne(User::class);
+    public function sellerRequest(){
+        return $this->hasOne(SellerRequest::class);
     }
 
     public function wishlist()
     {
-        return $this->BelongsToMany(Product::class);
+        return $this->BelongsToMany(Product::class,'product_user','user_id','product_id')->withTimestamps();
     }
 
     /**

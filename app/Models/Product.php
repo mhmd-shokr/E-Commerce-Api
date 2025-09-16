@@ -37,6 +37,6 @@ class Product extends Model
     }
 
     public function wishliedBy(){
-        return $this->belongsToMany(User::class,'wishlists');
+        return $this->belongsToMany(User::class,'wishlists','product_user','product_id','user_id')->withTimestamps();
     }
 }

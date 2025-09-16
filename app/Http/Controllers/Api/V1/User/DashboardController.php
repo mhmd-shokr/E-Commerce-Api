@@ -76,8 +76,12 @@ class DashboardController extends Controller
     public function requestSeller(Request $request)
         {
             $user=Auth::user();
-            if($user->sellerRequest && $user->sellerRequest->status==='pending'){
-                return response()->json(['message'=>'You Already Have a Pending Request']);
+
+            if($user->sellerRequest()->where('status','pending')->exists()){
+                return response()->json(['message'=>'You Already Have a Pending Request'],400);
+            }
+            if($user->sellerRequest){
+                return response()->json(['message'=>'You Already Have a Pending Request'],400);
             }
             $sellerRequest=SellerRequest::create([
                 'user_id'=>$user->id,

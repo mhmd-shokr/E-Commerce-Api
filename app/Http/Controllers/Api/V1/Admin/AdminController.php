@@ -20,7 +20,7 @@ class AdminController extends Controller
     public function approve($id){
         $request=SellerRequest::findOrFail($id);
         $request->update(["status"=>'approved']);
-        $request->user()->syncRoles(['Seller']);
+        $request->user->syncRoles(['Seller']);
         $request->user->notify(new ApproveRequestNotification($request));
     return response()->json(["message"=>'request Approved , User Is Now Seller'],201);
     }
