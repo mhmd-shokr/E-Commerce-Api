@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api\v1\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\v1\OrderResource;
+use App\Models\Order;
 use App\Models\OrderItems;
-use App\Models\Orders;
+use App\Models\SellerRequest;
+use App\Models\User;
+use App\Notifications\SellerRequestNotification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
@@ -21,17 +24,17 @@ class DashboardController extends Controller
             'user' => $user
         ]);    }
 
-    public function orders(){
-        $orders=Orders::where('user_id',Auth::id())->orderBy('created_at','desc')->paginate(10);
+    public function Order(){
+        $Order=Order::where('user_id',Auth::id())->orderBy('created_at','desc')->paginate(10);
         return response()->json([
             'message' => 'success',
-            'orders' => $orders
+            'Order' => $Order
         ]);
     }
 
     public function orderDetails($orderId)
     {
-        $order=Orders::where('user_id',Auth::id())->where('id',$orderId)->first();
+        $order=Order::where('user_id',Auth::id())->where('id',$orderId)->first();
         if (!$order) {
             return response()->json([
                 'message' => 'Order not found or not authorized'
@@ -50,9 +53,9 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function cancelOredr(Request $request,Orders $order)
+    public function cancelOredr(Request $request,Order $order)
     {
-        // $order=Orders::findOrFail($request->order_id);
+        // $order=Order::findOrFail($request->order_id);
         
         if (!$order) {
             return response()->json([
@@ -68,4 +71,24 @@ class DashboardController extends Controller
             'order' =>  new OrderResource($order)
         ]);
     }
+
+
+    public function requestSeller(Request $request)
+        {
+            $user=Auth::user();
+            if($user->sellerRequest && $user->sellerRequest->status==='pending'){
+                return response()->json(['message'=>'You Already Have a Pending Request']);
+            }
+            $sellerRequest=SellerRequest::create([
+                'user_id'=>$user->id,
+                'status'=>'pending',
+            ]);
+
+            $admins=User::role('Admin')->get();
+            foreach($admins as $admin){
+                $admin->notify(new SellerRequestNotification($sellerRequest));
+            }
+
+            return response()->json(['message'=>'Your Request Has Been Sybmitted And Witting Approve','request'=>$sellerRequest],201);
+        }
 }

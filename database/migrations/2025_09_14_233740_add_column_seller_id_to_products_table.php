@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('carts', function (Blueprint $table) {
-            $table->uuid('cookie_id')->nullable()->change();
+        Schema::table('products', function (Blueprint $table) {
+            $table->foreignId('seller_id')->nullable()->constrained('users')->cascadeOnDelete()->after('id');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('carts', function (Blueprint $table) {
-            $table->uuid('cookie_id')->nullable(false)->change();
+        Schema::table('products', function (Blueprint $table) {
+            //
         });
     }
 };

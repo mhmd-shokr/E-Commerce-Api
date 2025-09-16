@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCartRequest;
 use App\Http\Requests\UpdateCartRequest;
+use App\Models\Cart;
 use App\Models\Product;
 use App\Repostries\cart\CartRepositry;
 use Illuminate\Http\Request;
@@ -74,6 +75,12 @@ class CartController extends Controller
     public function destroy(CartRepositry $cart,$id)
     {
         // $repositry=App::make('cart');
+        $item =Cart::find($id);
+        if (!$item) {
+            return response()->json([
+                'message' => 'Product not found in cart',
+            ], 404);
+        }
         $cart->delete($id);
         return response()->json([
             'message' => 'Product deleted successfully',

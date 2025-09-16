@@ -4,24 +4,24 @@ namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
-use App\Models\Orders;
+use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 class DashboardController extends Controller
 {
     public function index(Request $request){
         {
             //%b get month like as (Jan, Feb, Mar).
-            // Get last 3 orders sorted by creation date (latest first)
-            $orders = Orders::orderBy('created_at', 'desc')->take(3)->get();
+            // Get last 3 Order sorted by creation date (latest first)
+            $Order = Order::orderBy('created_at', 'desc')->take(3)->get();
             
             // Dashboard summary: total amounts and counts by status
             //suumary for money debend on status and numbers of oredrs debend on ststus
-            $dashboardData = Orders::selectRaw("
+            $dashboardData = Order::selectRaw("
                 SUM(total) AS TotalAmount,
                 SUM(IF(status='ordered', total, 0)) AS TotalOrderAmount,
                 SUM(IF(status='delivered', total, 0)) AS TotalDeliveredAmount,
                 SUM(IF(status='canceled', total, 0)) AS TotalCanceledAmount,
-                COUNT(*) AS TotalOrders,
+                COUNT(*) AS TotalOrder,
                 SUM(IF(status='ordered', 1, 0)) AS OrderCount,
                 SUM(IF(status='delivered', 1, 0)) AS DeliveredCount,
                 SUM(IF(status='canceled', 1, 0)) AS CanceledCount
@@ -48,7 +48,7 @@ class DashboardController extends Controller
                         SUM(IF(status = 'delivered', total, 0)) AS TotalDeliveredAmount,
                         SUM(IF(status = 'canceled', total, 0)) AS TotalCanceledAmount
         
-                    FROM orders
+                    FROM Order
                     WHERE YEAR(created_at) = YEAR(NOW())
                     GROUP BY YEAR(created_at), MONTH(created_at), DATE_FORMAT(created_at, '%b')
                     ORDER BY MONTH(created_at)
@@ -68,7 +68,7 @@ class DashboardController extends Controller
             $totalCanceledAmount = collect($monthlyDatas)->sum('TotalCanceledAmount');
         
             return response()->json([
-                'orders' => $orders,
+                'Order' => $Order,
                 'dashboardData' => $dashboardData,
                 'monthlyData' => $monthlyDatas,
                 'chart' => [

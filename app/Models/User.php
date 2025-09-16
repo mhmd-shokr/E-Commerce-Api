@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -14,9 +15,9 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable,HasApiTokens,HasRoles;
 
-    public function orders()
+    public function Order()
     {
-        return $this->hasMany(Orders::class);
+        return $this->hasMany(Order::class);
     }
     
     public function carts()
@@ -29,6 +30,14 @@ class User extends Authenticatable
         return $this->hasMany(Reviews::class);
     }
     
+    public function RequetsSeller(){
+        return $this->hasOne(User::class);
+    }
+
+    public function wishlist()
+    {
+        return $this->BelongsToMany(Product::class);
+    }
 
     /**
      * The attributes that are mass assignable.

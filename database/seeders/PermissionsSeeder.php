@@ -27,14 +27,14 @@ class PermissionsSeeder extends Seeder
             // Cart
             'view cart', 'add to cart', 'update cart', 'remove from cart', 'clear cart',
 
-            // Orders
-            'view orders', 'create order', 'update order status', 'cancel order', 'refund order',
+            // Order
+            'view Order', 'create order', 'update order status', 'cancel order', 'refund order',
 
             // Reviews
             'view reviews', 'create review', 'edit review', 'delete review',
 
-            // Coupons
-            'view coupons', 'create coupon', 'edit coupon', 'delete coupon',
+            // Coupon
+            'view Coupon', 'create coupon', 'edit coupon', 'delete coupon',
 
             // Settings
             'manage roles', 'manage permissions', 'manage site settings',
@@ -54,13 +54,13 @@ class PermissionsSeeder extends Seeder
 
         $seller->givePermissionTo([
             'view products', 'create product', 'edit product', 'delete product', 'manage stock',
-            'view categories', 'view orders',
+            'view categories', 'view Order',
         ]);
 
         $customer->givePermissionTo([
             'view products', 'view categories',
             'view cart', 'add to cart', 'update cart', 'remove from cart', 'clear cart',
-            'create order', 'view orders',
+            'create order', 'view Order',
             'create review', 'view reviews',
         ]);
     }

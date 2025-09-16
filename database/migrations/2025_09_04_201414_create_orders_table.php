@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('Order', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
                 // Pricing
@@ -19,20 +19,12 @@ return new class extends Migration
             $table->decimal('discount',8,2)->default(0);
             $table->decimal('tax',8,2);
             $table->decimal('total',8,2);
-                // Customer Info
-            $table->string('name');
-            $table->string('phone');
-            $table->string('locality');
-            $table->string('address');
-            $table->string('city');
-            $table->string('state');
-            $table->string('country');
-            $table->string('landmark')->nullable();
-            $table->string('zip');
-            $table->enum('type',['home','work'])->default('home');
+
+            $table->string('payment_method');
+            $table->string('number')->unique();
             // Order Status
-            $table->enum('status',['ordered','canceled','delivered']);
-            $table->boolean('is_shipping_different')->default(false);
+            $table->enum('status',['pending','canceled','delivered','proccesing','refunded']);
+            $table->enum('payment_status',['pending','paid','failed']);
                 // Dates
             $table->date('delivered_date')->nullable();
             $table->date('canceled_date')->nullable();
@@ -45,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('Order');
     }
 };

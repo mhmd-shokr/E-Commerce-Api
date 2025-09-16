@@ -31,4 +31,12 @@ class Product extends Model
     {
         return $this->hasMany(OrderItems::class);
     }
+
+    public function seller(){
+        return $this->belongsTo(User::class,'seller_id');
+    }
+
+    public function wishliedBy(){
+        return $this->belongsToMany(User::class,'wishlists');
+    }
 }

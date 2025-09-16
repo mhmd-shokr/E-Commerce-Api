@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\Cookie;class AuthController extends Controller
         $this->mergeCart($user->id);
 
         $token=$user->createToken('auth_token')->plainTextToken;
-        return response()->json(["messaage"=>'login successs', 'user' => new AuthResource( $user), 'token' => $token], 201);
+        return response()->json(["messaage"=>'login successs', 'user' => new AuthResource( $user), 'role'=>$user->getRoleNames(),'token' => $token], 201);
     }
 
     public function profile(){

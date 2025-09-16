@@ -7,30 +7,30 @@ use App\Http\Requests\Admin\v1\UpdateOrderRequest;
 use App\Http\Resources\Admin\v1\OrderItemsResource;
 use App\Http\Resources\Admin\v1\OrderResource;
 use App\Models\OrderItems;
-use App\Models\Orders;
+use App\Models\Order;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Request;
 
 class OrderController extends Controller
 {
     public function index(Request $request){
-        $orders=Orders::orderBy('created_at','desc')->paginate();
+        $Order=Order::orderBy('created_at','desc')->paginate();
         return response()->json([
-            "data"=>OrderResource::collection($orders),
-            "message"=>'orders fetched successfully',
+            "data"=>OrderResource::collection($Order),
+            "message"=>'Order fetched successfully',
         ],200);
     }
 
-    public function show(Orders $order){
+    public function show(Order $order){
         // $transaction=Transaction::where('order_id',$order->id)->first();
         return response()->json([
-            "message"=>'orders fetched successfully',
+            "message"=>'Order fetched successfully',
             "order"=>new OrderResource($order->load('OrderItems')),
             // "transaction"=>$transaction,
         ],200);
     }
 
-    public function update(UpdateOrderRequest $request,Orders $order){
+    public function update(UpdateOrderRequest $request,Order $order){
         $request->validated(); //change status debend on user request delivered or canceled or ordered
         $order->status = $request->order_status;
     
